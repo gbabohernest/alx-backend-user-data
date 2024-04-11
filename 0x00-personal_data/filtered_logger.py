@@ -30,5 +30,4 @@ def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """ A function that returns the log message obfuscated."""
     pattern = '|'.join(fields)
-    return re.sub(f'({pattern})=[^{separator}]*',
-                  f'\\1={redaction}', message)
+    return re.sub(f'({pattern})=[^{separator}]*', f'\\1={redaction}', message)
