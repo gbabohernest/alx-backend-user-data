@@ -17,17 +17,13 @@ log message obfuscated:
     filter_datum should be less than 5 lines long and use re.sub
     to perform the substitution with a single regex.
 """
-
-import logging
-from logging import Logger, StreamHandler
 import re
-from typing import List, Tuple
-
-PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+from typing import List
 
 
 def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """ A function that returns the log message obfuscated."""
+
     pattern = '|'.join(fields)
     return re.sub(f'({pattern})=[^{separator}]*', f'\\1={redaction}', message)
