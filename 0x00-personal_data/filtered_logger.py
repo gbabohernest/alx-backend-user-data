@@ -26,14 +26,6 @@ from typing import List, Tuple
 PII_FIELDS: Tuple = ("name", "email", "phone", "ssn", "password")
 
 
-def filter_datum(fields: List[str], redaction: str,
-                 message: str, separator: str) -> str:
-    """ A function that returns the log message obfuscated."""
-    pattern = '|'.join(fields)
-    return re.sub(f'({pattern})=[^{separator}]*',
-                  f'\\1={redaction}', message)
-
-
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class"""
 
@@ -41,7 +33,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: List[str] | Tuple):
+    def __init__(self, fields: List[str] or Tuple[str]):
         """ Initialize"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
@@ -49,15 +41,20 @@ class RedactingFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
         """ Filter values in incoming log records"""
 
+        def filter_datum(fields: List[str], redaction: str,
+                         message: str, separator: str) -> str:
+            """ A function that returns the log message obfuscated."""
+            pattern = '|'.join(fields)
+            return re.sub(f'({pattern})=[^{separator}]*',
+                          f'\\1={redaction}', message)
+
         message = super().format(record)
         return filter_datum(self.fields, self.REDACTION,
                             message, self.SEPARATOR)
 
 
 def get_logger() -> Logger:
-    """ Create a new logger for user data.
-    Return a logging.Logger object.
-    """
+    """ Return a logging.Logger object."""
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     logger.propagate = False
