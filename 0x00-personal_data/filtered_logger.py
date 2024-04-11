@@ -26,6 +26,14 @@ from typing import List, Tuple
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
+def filter_datum(fields: List[str], redaction: str,
+                 message: str, separator: str) -> str:
+    """ A function that returns the log message obfuscated."""
+    pattern = '|'.join(fields)
+    return re.sub(f'({pattern})=[^{separator}]*',
+                  f'\\1={redaction}', message)
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class"""
 
@@ -40,13 +48,6 @@ class RedactingFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """ Filter values in incoming log records"""
-
-        def filter_datum(fields: List[str], redaction: str,
-                         message: str, separator: str) -> str:
-            """ A function that returns the log message obfuscated."""
-            pattern = '|'.join(fields)
-            return re.sub(f'({pattern})=[^{separator}]*',
-                          f'\\1={redaction}', message)
 
         message = super().format(record)
         return filter_datum(self.fields, self.REDACTION,
