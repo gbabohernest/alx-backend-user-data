@@ -19,8 +19,11 @@ log message obfuscated:
 """
 
 import logging
+from logging import Logger, StreamHandler
 import re
-from typing import List
+from typing import List, Tuple
+
+PII_FIELDS: Tuple = ("email", "phone", "ssn", "password", "ip")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -30,7 +33,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: List[str]):
+    def __init__(self, fields: List[str] or Tuple[str]):
         """ Initialize"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
@@ -46,3 +49,19 @@ class RedactingFormatter(logging.Formatter):
         message = super().format(record)
         return filter_datum(self.fields, self.REDACTION,
                             message, self.SEPARATOR)
+
+
+def get_logger() -> Logger:
+    """ Return a logging.Logger object."""
+    logger = logging.getLogger("user_data")
+    logger.setLevel(logging.INFO)
+    logger.propagate = False
+
+    formatter = RedactingFormatter(fields=PII_FIELDS)
+
+    stream_handler = StreamHandler()
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
+
+    return logger
