@@ -94,3 +94,36 @@ class RedactingFormatter(logging.Formatter):
         message = super().format(record)
         return filter_datum(self.fields, self.REDACTION,
                             message, self.SEPARATOR)
+
+
+def main():
+    """Retrieve user data from database"""
+
+    # Configure logger
+    logger = get_logger()
+
+    # Connect to the database
+    try:
+        db_connection = get_db()
+        cursor = db_connection.cursor()
+
+        # Fetch all rows from the users table
+        cursor.execute("SELECT * FROM users")
+        users = cursor.fetchall()
+
+        # Log each user data with redacted PII fields
+        for user in users:
+            filtered_user = {key: "***" if key in PII_FIELDS else value
+                             for key, value in zip(cursor.column_names, user)}
+            logger.info("Filtered user data: %s", filtered_user)
+
+    except mysql.connector.Error as err:
+        logger.error("Error connecting to database: %s", err)
+    finally:
+        if 'db_connection' in locals() and db_connection.is_connected():
+            cursor.close()
+            db_connection.close()
+
+
+if __name__ == '__main__':
+    main()
