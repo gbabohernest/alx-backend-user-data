@@ -59,20 +59,21 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     db_host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
     db_name = os.getenv("PERSONAL_DATA_DB_NAME")
 
-    if not db_name:
-        raise ValueError("PERSONAL_DATA_DB_NAME environment variable not set.")
+    # if not db_name:
+    #    raise ValueError("PERSONAL_DATA_DB_NAME environment variable not set.")
 
-    try:
-        connection = mysql.connector.connection.MySQLConnection(
-            user=db_username,
-            password=db_password,
-            host=db_host,
-            database=db_name
-        )
-        return connection
-    except mysql.connector.Error as err:
-        print(f"Error connecting to MySQL database: {err}")
-        raise
+    # try:
+    connection = mysql.connector.connection.MySQLConnection(
+        user=db_username,
+        password=db_password,
+        host=db_host,
+        database=db_name
+    )
+    
+    return connection
+    # except mysql.connector.Error as err:
+    #    print(f"Error connecting to MySQL database: {err}")
+    #    raise
 
 
 class RedactingFormatter(logging.Formatter):
