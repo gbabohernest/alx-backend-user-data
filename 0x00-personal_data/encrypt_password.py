@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
-"""
-Main file
+"""Using bcrypt, this module defines a
+   function that encrypt a password and
+   return a salted, hashed password.
 """
 
-hash_password = __import__('encrypt_password').hash_password
+import bcrypt
 
-password = "MyAmazingPassw0rd"
-print(hash_password(password))
-print(hash_password(password))
+
+def hash_password(password: str) -> bytes:
+    """Hashes a password using bcrypt and
+       return the hashed password as bytes
+    """
+    # Generate a salt and hash the password
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password.encode(), salt)
+    return hashed_password
