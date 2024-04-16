@@ -66,4 +66,5 @@ class Auth:
             TypeVar('User'): The current user object, or None if
                              not authenticated.
         """
-        return request
+        # return request
+        return None
