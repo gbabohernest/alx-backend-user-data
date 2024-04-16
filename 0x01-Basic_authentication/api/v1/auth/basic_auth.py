@@ -10,7 +10,7 @@ class BasicAuth(Auth):
     """Class for basic authentication."""
 
     def extract_base64_authorization_header(self, authorization_header: str
-                                            ) -> str | None:
+                                            ) -> str:
         """ Extract the Base64 part of the Authorization
             header for Basic Authentication.
         """
