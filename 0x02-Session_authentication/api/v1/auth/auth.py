@@ -3,12 +3,11 @@
 This module defines an Auth class that manage API authentication.
 """
 from typing import List, TypeVar
-from flask import Request
+from flask import request
 
 
 class Auth:
-    """ Class to manage API authentication and serve as a
-        template for all authentication system.
+    """ Class to manage API authentication.
     """
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
@@ -43,7 +42,7 @@ class Auth:
 
         return True
 
-    def authorization_header(self, request: Request = None) -> str | None:
+    def authorization_header(self, request=None) -> str:
         """
         Get the authorization header from the request.
 
