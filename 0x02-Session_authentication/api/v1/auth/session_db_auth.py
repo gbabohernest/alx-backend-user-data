@@ -9,8 +9,9 @@
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from api.v1.app import auth
 from models.user_session import UserSession
+from models.user import User
 from datetime import datetime, timedelta
-from typing import TypeVar, Optional
+from typing import Optional
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -30,19 +31,16 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return None
 
-        if isinstance(session_id, str):
-            # store the UserSession in the database (file)
-            session_data = {
-                'user_id': user_id,
-                'session_id': session_id,
-                'created_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
-                'updated_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
-            }
+        if not User.get(user_id):
+            return None
 
-            user_session = UserSession(**session_data)
-            user_session.save()
-
-            return session_id
+        kwargs = {
+            'user_id': user_id,
+            'session_id': session_id,
+        }
+        user_session = UserSession(**kwargs)
+        user_session.save()
+        return session_id
 
     def user_id_for_session_id(self, session_id=None) -> Optional[str]:
         """ Get the User ID by session ID from the database.
@@ -78,11 +76,8 @@ class SessionDBAuth(SessionExpAuth):
         """ Destroy the UserSession based on Session ID
            from request cookie.
         """
-        if request is None:
-            return False
-
         session_id = self.session_cookie(request)
-        if session_id is None:
+        if request is None:
             return False
 
         # Delete the UserSession from the database
