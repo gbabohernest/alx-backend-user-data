@@ -46,33 +46,7 @@ class SessionDBAuth(SessionExpAuth):
         if not user_sessions:
             return None
 
-        # return user_sessions[0].user_id
-
-        # check session expiration
-        if len(user_sessions) <= 0:
-            return None
-
-        # session_data = user_sessions[0]
-        # created_at = datetime.strptime(session_data.data.created_at,
-        #                               "%Y-%m-%dT%H:%M:%S")
-
-        time_now = datetime.now()
-        session_time = timedelta(seconds=self.session_duration)
-        session_expiry = user_sessions[0].created_at + time_now
-
-        if session_expiry < session_time:
-            return None
-
         return user_sessions[0].user_id
-
-        # session_duration = self.session_duration
-        # if session_duration > 0:
-        #     session_expiry = created_at + timedelta(seconds=session_duration)
-        #     if datetime.utcnow() > session_expiry:
-        #         session_data.remove()
-        #         return None
-        #
-        # return session_data.user_id
 
     def destroy_session(self, request=None) -> bool:
         """ Destroy the UserSession based on Session ID
