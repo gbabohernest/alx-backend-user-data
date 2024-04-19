@@ -21,10 +21,19 @@ if AUTH_TYPE == 'basic_auth':
 
     auth = BasicAuth()
 
-else:
+if AUTH_TYPE == 'auth':
     from api.v1.auth.auth import Auth as AuthType
 
     auth = AuthType()
+
+if AUTH_TYPE == 'session_auth':
+    from api.v1.auth.session_auth import SessionAuth
+    auth = SessionAuth()
+
+# else:
+#     from api.v1.auth.auth import Auth as AuthType
+#
+#     auth = AuthType()
 
 
 @app.before_request
