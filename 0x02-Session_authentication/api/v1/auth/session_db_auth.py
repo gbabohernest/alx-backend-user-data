@@ -22,18 +22,19 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return None
 
-        # store the UserSession in the database (file)
-        session_data = {
-            'user_id': user_id,
-            'session_id': session_id,
-            'created_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
-            'updated_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
-        }
+        if isinstance(session_id, str):
+            # store the UserSession in the database (file)
+            session_data = {
+                'user_id': user_id,
+                'session_id': session_id,
+                'created_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
+                'updated_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+            }
 
-        user_session = UserSession(**session_data)
-        user_session.save()
+            user_session = UserSession(**session_data)
+            user_session.save()
 
-        return session_id
+            return session_id
 
     def user_id_for_session_id(self, session_id=None) -> Optional[str]:
         """ Get the User ID by session ID from the database.
