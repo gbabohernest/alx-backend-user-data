@@ -26,8 +26,8 @@ class SessionDBAuth(SessionExpAuth):
         session_data = {
             'user_id': user_id,
             'session_id': session_id,
-            'created_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
-            'updated_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
+            # 'created_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"),
+            # 'updated_at': datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S")
         }
 
         user_session = UserSession(**session_data)
