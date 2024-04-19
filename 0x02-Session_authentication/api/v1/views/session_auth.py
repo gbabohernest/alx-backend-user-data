@@ -59,6 +59,8 @@ def logout():
     Returns: An empty JSON response with status code 200 on successful logout,
         or aborts with status code 404 if the session cannot be destroyed.
     """
+    from api.v1.app import auth
+
     if not auth.destroy_session(request):
         abort(404)
 
