@@ -5,7 +5,7 @@
 from flask import request, jsonify, make_response, abort
 from api.v1.views import app_views
 from models.user import User
-from api.v1.app import auth
+# from api.v1.app import auth
 from os import getenv
 
 
@@ -36,14 +36,18 @@ def login():
     if not user.is_valid_password(password):
         return jsonify({"error": "wrong password"}), 401
 
-    session_id = auth.create_session(user.id)
+    else:
 
-    response_data = user.to_json()
-    response = make_response(jsonify(response_data))
-    session_name = getenv('SESSION_NAME', '_my_session_id')
-    response.set_cookie(session_name, session_id)
+        from api.v1.app import auth
 
-    return response
+        session_id = auth.create_session(user.id)
+
+        response_data = user.to_json()
+        response = make_response(jsonify(response_data))
+        session_name = getenv('SESSION_NAME', '_my_session_id')
+        response.set_cookie(session_name, session_id)
+
+        return response
 
 
 @app_views.route('/auth_session/logout', methods=['DELETE'],
