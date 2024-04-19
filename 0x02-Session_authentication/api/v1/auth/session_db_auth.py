@@ -4,7 +4,7 @@
 
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import TypeVar, Optional
 
 
@@ -38,8 +38,6 @@ class SessionDBAuth(SessionExpAuth):
     def user_id_for_session_id(self, session_id=None) -> Optional[str]:
         """ Get the User ID by session ID from the database.
         """
-        from api.v1.app import auth
-
         if session_id is None:
             return None
 
