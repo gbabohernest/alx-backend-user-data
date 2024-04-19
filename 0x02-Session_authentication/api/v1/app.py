@@ -15,24 +15,16 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 auth = None
 AUTH_TYPE = os.getenv('AUTH_TYPE')
+
 if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth as AuthType
+
     auth = AuthType()
+
 elif AUTH_TYPE == 'basic_auth':
     from api.v1.auth.basic_auth import BasicAuth
+
     auth = BasicAuth()
-
-elif AUTH_TYPE == 'session_auth':
-    from api.v1.auth.session_auth import SessionAuth
-    auth = SessionAuth()
-
-elif AUTH_TYPE == 'session_exp_auth':
-    from api.v1.auth.session_exp_auth import SessionExpAuth
-    auth = SessionExpAuth()
-
-elif AUTH_TYPE == 'session_db_auth':
-    from api.v1.auth.session_db_auth import SessionDBAuth
-    auth = SessionDBAuth()
 
 
 @app.before_request
@@ -42,17 +34,12 @@ def before_request_handler():
     """
     if auth is None:
         return
-
     excluded_paths = ['/api/v1/status/',
                       '/api/v1/unauthorized/',
-                      '/api/v1/forbidden/',
-                      '/api/v1/auth_session/login/'
-                      ]
-
+                      '/api/v1/forbidden/']
     if auth.require_auth(request.path, excluded_paths):
         auth_header = auth.authorization_header(request)
-        auth_cookie = auth.session_cookie(request)
-        if auth_header is None and auth_cookie is None:
+        if auth_header is None:
             abort(401)
 
         request.current_user = auth.current_user(request)
@@ -60,13 +47,11 @@ def before_request_handler():
             abort(403)
 
 
-@app.errorhandler(403)
-def forbidden(error) -> str:
-    """Forbidden handler
+@app.errorhandler(404)
+def not_found(error) -> str:
+    """ Not found handler
     """
-    response = jsonify({"error": "Forbidden"})
-    response.status_code = 403
-    return response
+    return jsonify({"error": "Not found"}), 404
 
 
 @app.errorhandler(401)
@@ -78,11 +63,13 @@ def not_authorized(error) -> str:
     return response
 
 
-@app.errorhandler(404)
-def not_found(error) -> str:
-    """ Not found handler
+@app.errorhandler(403)
+def forbidden(error) -> str:
+    """Forbidden handler
     """
-    return jsonify({"error": "Not found"}), 404
+    response = jsonify({"error": "Forbidden"})
+    response.status_code = 403
+    return response
 
 
 if __name__ == "__main__":
