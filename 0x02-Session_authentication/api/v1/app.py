@@ -36,7 +36,6 @@ elif AUTH_TYPE == 'session_db_auth':
 
 else:
     from api.v1.auth.auth import Auth as AuthType
-
     auth = AuthType()
 
 

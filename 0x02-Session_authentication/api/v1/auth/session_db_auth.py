@@ -1,25 +1,22 @@
 #!/usr/bin/env python3
-""" This module defines a Class for creating a
+"""This module defines a Class for creating a
     new authentication system based on Session ID
     stored in database (file).
 
     - Session DB Authentication module.
 """
-
-from api.v1.auth.session_exp_auth import SessionExpAuth
-from api.v1.app import auth
-from models.user_session import UserSession
-from models.user import User
 from datetime import datetime, timedelta
-from typing import Optional
+from models.user_session import UserSession
+from .session_exp_auth import SessionExpAuth
+from api.v1.app import auth
+# from typing import Optional
 
 
 class SessionDBAuth(SessionExpAuth):
     """ Class for creating a new authentication system.
         Session Authentication with Database class
     """
-
-    def create_session(self, user_id=None) -> Optional[str]:
+    def create_session(self, user_id=None):
         """ Create and store a new instance of UserSession.
 
          Returns: Session ID
@@ -31,18 +28,16 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return None
 
-        if not User.get(user_id):
-            return None
+        if isinstance(session_id, str):
+            kwargs = {
+                'user_id': user_id,
+                'session_id': session_id,
+            }
+            user_session = UserSession(**kwargs)
+            user_session.save()
+            return session_id
 
-        kwargs = {
-            'user_id': user_id,
-            'session_id': session_id,
-        }
-        user_session = UserSession(**kwargs)
-        user_session.save()
-        return session_id
-
-    def user_id_for_session_id(self, session_id=None) -> Optional[str]:
+    def user_id_for_session_id(self, session_id=None):
         """ Get the User ID by session ID from the database.
 
             Return: User ID by requesting UserSession in DB based
@@ -72,7 +67,7 @@ class SessionDBAuth(SessionExpAuth):
 
         # return user_sessions[0].user_id
 
-    def destroy_session(self, request=None) -> bool:
+    def destroy_session(self, request=None):
         """ Destroy the UserSession based on Session ID
            from request cookie.
         """
