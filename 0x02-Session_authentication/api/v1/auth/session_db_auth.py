@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""This module defines a Class for creating a
-    new authentication system based on Session ID
-    stored in database (file).
-
-    - Session DB Authentication module.
+""" Session DB Authentication module
 """
 from datetime import datetime, timedelta
 from models.user_session import UserSession
@@ -39,9 +35,6 @@ class SessionDBAuth(SessionExpAuth):
 
     def user_id_for_session_id(self, session_id=None):
         """ Get the User ID by session ID from the database.
-
-            Return: User ID by requesting UserSession in DB based
-            on session_id
         """
         if session_id is None:
             return None
