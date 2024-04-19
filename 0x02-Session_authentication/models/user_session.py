@@ -5,7 +5,7 @@ from models.base import Base
 
 
 class UserSession(Base):
-    """User Session class
+    """User Session class that inherits from Base.
     """
 
     def __init__(self, *args: list, **kwargs: dict):

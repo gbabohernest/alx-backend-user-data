@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-""" Session DB Authentication module
+""" This module defines a Class for creating a
+    new authentication system based on Session ID
+    stored in database (file).
+
+    - Session DB Authentication module.
 """
 
 from api.v1.auth.session_exp_auth import SessionExpAuth
@@ -10,11 +14,14 @@ from typing import TypeVar, Optional
 
 
 class SessionDBAuth(SessionExpAuth):
-    """ Session Authentication with Database class
+    """ Class for creating a new authentication system.
+        Session Authentication with Database class
     """
 
     def create_session(self, user_id=None) -> Optional[str]:
         """ Create and store a new instance of UserSession.
+
+         Returns: Session ID
         """
         if user_id is None:
             return None
@@ -39,6 +46,9 @@ class SessionDBAuth(SessionExpAuth):
 
     def user_id_for_session_id(self, session_id=None) -> Optional[str]:
         """ Get the User ID by session ID from the database.
+
+            Return: User ID by requesting UserSession in DB based
+            on session_id
         """
         if session_id is None:
             return None
@@ -66,7 +76,7 @@ class SessionDBAuth(SessionExpAuth):
 
     def destroy_session(self, request=None) -> bool:
         """ Destroy the UserSession based on Session ID
-           from request cookie
+           from request cookie.
         """
         if request is None:
             return False
