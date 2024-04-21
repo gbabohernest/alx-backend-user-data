@@ -39,15 +39,6 @@ class SessionDBAuth(SessionExpAuth):
         """ Get the User ID of the user associated
             with a given session ID from the database.
         """
-        # if session_id is None:
-        #     return None
-        #
-        # # search for the UserSession based on session_id
-        # user_sessions = UserSession.search({'session_id': session_id})
-        # if not user_sessions:
-        #     return None
-        #
-        # return user_sessions[0].user_id
 
         if session_id is None:
             return None
