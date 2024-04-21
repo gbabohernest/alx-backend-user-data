@@ -36,7 +36,8 @@ class SessionDBAuth(SessionExpAuth):
         return session_id
 
     def user_id_for_session_id(self, session_id=None) -> Optional[str]:
-        """ Get the User ID by session ID from the database.
+        """ Get the User ID of the user associated
+            with a given session ID from the database.
         """
         # if session_id is None:
         #     return None
@@ -52,23 +53,24 @@ class SessionDBAuth(SessionExpAuth):
             return None
 
         try:
-            sessions = UserSession.search({'session_id': session_id})
+            # search for the UserSession based on session_id
+            user_sessions = UserSession.search({'session_id': session_id})
         except Exception:
             return None
 
-        if not sessions:
+        if not user_sessions:
             return None
 
         cur_time = datetime.now()
         time_span = timedelta(seconds=self.session_duration)
-        exp_time = sessions[0].created_at + time_span
+        exp_time = user_sessions[0].created_at + time_span
 
         if exp_time < cur_time:
             # Session has expired
-            sessions[0].remove()
+            user_sessions[0].remove()
             return None
 
-        return sessions[0].user_id
+        return user_sessions[0].user_id
 
     def destroy_session(self, request=None) -> bool:
         """ Destroy the UserSession based on Session ID
