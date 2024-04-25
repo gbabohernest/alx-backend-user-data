@@ -39,7 +39,7 @@ def users() -> str:
         response = {"email": user.email, "message": "user created"}
         return jsonify(response)
 
-    except ValueError:
+    except Exception:
         response = {"message": "email already registered"}
         return jsonify(response), 400
 
