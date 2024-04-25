@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Defines a Basic Flask application"""
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
+
 from auth import Auth
 
 app = Flask(__name__)
@@ -9,7 +10,7 @@ AUTH = AUTH()
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
-def index():
+def index() -> str:
     """
     Route handler for the root endpoint ("/")
 
@@ -21,7 +22,7 @@ def index():
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
-def users():
+def users() -> str:
     """
     Route handler for the POST /users endpoint
     to register a new user.
@@ -30,13 +31,15 @@ def users():
         JSON: A JSON response indicating success or failure
               of user registration.
     """
+    email = request.form.get("email")
+    password = request.form.get("password")
     try:
-        email = request.form.get("email")
-        password = request.form.get("password")
+        # email = request.form.get("email")
+        # password = request.form.get("password")
 
         user = AUTH.register_user(email, password)
         response = {"email": user.email, "message": "user created"}
-        return jsonify(response), 200
+        return jsonify(response)
 
     except ValueError:
         response = {"message": "email already registered"}
