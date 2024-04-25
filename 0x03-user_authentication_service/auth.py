@@ -3,6 +3,7 @@
 A model for authentications related processes.
 """
 
+import uuid
 import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -26,6 +27,16 @@ def _hash_password(password: str) -> bytes:
     salt = bcrypt.gensalt()
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
     return hashed_password
+
+
+def _generate_uuid() -> str:
+    """
+    Generate a new UUID and return its string representation.
+
+    Returns:
+        str: The string representation of the new UUID.
+    """
+    return str(uuid.uuid4())
 
 
 class Auth:
