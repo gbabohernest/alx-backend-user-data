@@ -19,7 +19,8 @@ def index():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
-    
+
+
 # #!/usr/bin/env python3
 # """Defines a Basic Flask application"""
 
@@ -56,8 +57,8 @@ if __name__ == "__main__":
 #     email = request.form.get("email")
 #     password = request.form.get("password")
 #     try:
-        # email = request.form.get("email")
-        # password = request.form.get("password")
+#        # email = request.form.get("email")
+#        # password = request.form.get("password")
 
 #         user = AUTH.register_user(email, password)
 #         response = {"email": user.email, "message": "user created"}
