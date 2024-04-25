@@ -48,8 +48,7 @@ class DB:
             user = User(email=email, hashed_password=hashed_password)
             self._session.add(user)
             self._session.commit()
-        except IntegrityError:
-            # integrity errors such as duplicate email for instance.
+        except Exception:
             self._session.rollback()
             user = None
             # pass
