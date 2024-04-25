@@ -73,20 +73,19 @@ class DB:
             InvalidRequestsError: If invalid query arguments are passed.
         """
 
-        try:
-            query_filters = [getattr(User, key) == value for key, value in
-                             kwargs.items() if hasattr(User, key)]
-            if not query_filters:
-                raise InvalidRequestError()
+        if not kwargs:
+            raise InvalidRequestError
 
-            result = (self._session.query(User).filter(and_(*query_filters))
-                      .first())
+        query_filters = [getattr(User, key) == value for key, value in
+                         kwargs.items() if hasattr(User, key)]
 
-            if result is None:
-                raise NoResultFound()
+        if not query_filters:
+            raise InvalidRequestError
 
-            return result
-        except NoResultFound:
-            raise NoResultFound
-        except InvalidRequestError:
-            raise InvalidRequestError()
+        user = (self._session.query(User).filter(and_(*query_filters))
+                .first())
+
+        if not user:
+            raise NoResultFound()
+
+        return user
