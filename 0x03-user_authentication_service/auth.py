@@ -110,13 +110,11 @@ class Auth:
         try:
             user = self._db.find_user_by(email=email)
 
-            if not user:
-                return None
+            if user:
+                session_id = _generate_uuid()
+                user.session_id = session_id
 
-            session_id = _generate_uuid()
-            user.session_id = session_id
-
-            return user.session_id
+                return user.session_id
 
         except NoResultFound:
             return None
