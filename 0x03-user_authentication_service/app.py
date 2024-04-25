@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Defines a Basic Flask application"""
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from auth import Auth
 
+AUTH = AUTH()
 app = Flask(__name__)
 
 
