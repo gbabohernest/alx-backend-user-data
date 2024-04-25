@@ -45,13 +45,14 @@ class DB:
             User: The user object representing the added user.
         """
 
-        user = User(email=email, hashed_password=hashed_password)
-        self._session.add(user)
         try:
+            user = User(email=email, hashed_password=hashed_password)
+            self._session.add(user)
             self._session.commit()
         except IntegrityError:
             # integrity errors such as duplicate email for instance.
             self._session.rollback()
-            pass
+            user = None
+            # pass
 
         return user
