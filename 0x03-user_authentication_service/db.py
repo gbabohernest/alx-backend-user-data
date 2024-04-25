@@ -2,7 +2,7 @@
 """DB module
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -73,10 +73,19 @@ class DB:
         """
 
         try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
+            query_filters = [getattr(User, key) == value for key, value in
+                             kwargs.items() if hasattr(User, key)]
+            if not query_filters:
+                raise InvalidRequestError()
+
+            result = (self._session.query(User).filter(and_(*query_filters))
+                      .first())
+
+            if result is None:
                 raise NoResultFound()
-            return user
-        except InvalidRequestError as e:
-            self._session.rollback()
-            raise InvalidRequestError() from e
+
+            return result
+        except NoResultFound:
+            raise NoResultFound
+        except InvalidRequestError:
+            raise InvalidRequestError()
