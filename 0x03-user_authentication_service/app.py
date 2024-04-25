@@ -4,12 +4,13 @@
 from flask import Flask, jsonify, request
 from auth import Auth
 
-# AUTH = AUTH()
-app = Flask(__name__)
-AUTH = AUTH()
+AUTH = Auth()
 
-@app.route("/")
-def index():
+app = Flask(__name__)
+
+
+@app.route("/", methods=["GET"])
+def index() -> str:
     """
     Route handler for the root endpoint ("/")
     Returns:
