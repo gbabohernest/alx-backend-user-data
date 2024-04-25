@@ -4,9 +4,9 @@
 from flask import Flask, jsonify, request
 from auth import Auth
 
-AUTH = AUTH()
+# AUTH = AUTH()
 app = Flask(__name__)
-
+AUTH = AUTH()
 
 @app.route("/")
 def index():
