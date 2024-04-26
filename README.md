@@ -13,3 +13,4 @@
 | [0x00-personal_data](./0x00-personal_data)                   | **`Backend`** **`Authentification`** |
 | [0x01-Basic_authentication](./0x01-Basic_authentication)     | **`Backend`** **`Authentification`** |
 | [0x02-Session_authentication](./0x02-Session_authentication) | **`Backend`** **`Authentification`** |
+| [0x03-user_authentication_service](./0x03-user_authentication_service) | **`Backend`** **`Authentification`** |
