@@ -47,18 +47,8 @@ class DB:
         """
 
         user = User(email=email, hashed_password=hashed_password)
-
-        try:
-            self._session.add(user)
-            self._session.commit()
-
-        except IntegrityError:
-            self._session.rollback()
-            pass
-
-        except Exception:
-            self._session.rollback()
-            pass
+        self._session.add(user)
+        self._session.commit()
 
         return user
 
