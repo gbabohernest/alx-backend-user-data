@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.exc import InvalidRequestError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 # from sqlalchemy.exc import IntegrityError
 
@@ -46,14 +46,18 @@ class DB:
             User: The user object representing the added user.
         """
 
-        user = None
+        user = User(email=email, hashed_password=hashed_password)
 
         try:
-            user = User(email=email, hashed_password=hashed_password)
             self._session.add(user)
             self._session.commit()
 
+        except IntegrityError:
+            self._session.rollback()
+            pass
+
         except Exception:
+            self._session.rollback()
             pass
 
         return user
